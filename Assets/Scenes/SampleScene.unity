@@ -637,6 +637,7 @@ MonoBehaviour:
   controller: {fileID: 2970555481188927921}
   animator: {fileID: 1683671833}
   aJump: {fileID: 0}
+  triggerPrefab: {fileID: 8960353790350373649, guid: 070e4d82bff3b004d852999f1a5594c5, type: 3}
   playerRb: {fileID: 0}
   buddy1: {fileID: 0}
   buddy2: {fileID: 0}

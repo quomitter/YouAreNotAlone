@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip aJump;
     AudioSource audioSource;
 
+    [SerializeField] GameObject triggerPrefab;
+
     [SerializeField] Rigidbody2D playerRb;
     [SerializeField] Rigidbody2D buddy1;
     [SerializeField] Rigidbody2D buddy2;
@@ -89,6 +91,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isJumping", true);
             audioSource.PlayOneShot(aJump, 0.5f);
             playerJumpPoint = playerRb.position;
+            Instantiate(triggerPrefab, playerJumpPoint, Quaternion.identity);
 
         }
 
