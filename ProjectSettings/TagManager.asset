@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Buddy1
+  - Buddy2
+  - Buddy3
+  - Buddy4
+  - Buddy5
+  - Buddy6
   layers:
   - Default
   - TransparentFX
