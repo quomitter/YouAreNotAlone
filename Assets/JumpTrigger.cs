@@ -13,5 +13,9 @@ public class JumpTrigger : MonoBehaviour
             other.gameObject.GetComponent<Rigidbody2D>();
             other.attachedRigidbody.AddForce(new Vector2(0f, 400f));
         }
+        if(other.gameObject.tag == "Buddy6")
+        {
+            Destroy(gameObject,2f);
+        }
     }
 }
