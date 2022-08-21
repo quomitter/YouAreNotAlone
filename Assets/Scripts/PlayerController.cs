@@ -131,6 +131,10 @@ public class PlayerController : MonoBehaviour
         if(distanceFromPlayer > 2f) 
         {
             buddy1.transform.position = Vector2.MoveTowards(buddy1.position, playerRb.position, step);
+            if(buddy1.position == playerJumpPoint)
+            {
+                buddy1.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if(distanceFromPlayer < 2f)
         {
@@ -140,6 +144,10 @@ public class PlayerController : MonoBehaviour
         if (distanceFromBuddy1 > 2f)
         {
             buddy2.transform.position = Vector2.MoveTowards(buddy2.position, buddy1.position, step);
+            if (buddy2.position == playerJumpPoint)
+            {
+                buddy2.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if (distanceFromBuddy1 < 2f)
         {
@@ -149,6 +157,10 @@ public class PlayerController : MonoBehaviour
         if (distanceFromBuddy2 > 2f)
         {
             buddy3.transform.position = Vector2.MoveTowards(buddy3.position, buddy2.position, step);
+            if (buddy3.position == playerJumpPoint)
+            {
+                buddy3.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if (distanceFromBuddy2 < 2f)
         {
@@ -157,6 +169,10 @@ public class PlayerController : MonoBehaviour
         if (distanceFromBuddy3 > 2f)
         {
             buddy4.transform.position = Vector2.MoveTowards(buddy4.position, buddy3.position, step);
+            if (buddy4.position == playerJumpPoint)
+            {
+                buddy4.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if (distanceFromBuddy3 < 2f)
         {
@@ -165,6 +181,10 @@ public class PlayerController : MonoBehaviour
         if (distanceFromBuddy4 > 2f)
         {
             buddy5.transform.position = Vector2.MoveTowards(buddy5.position, buddy4.position, step);
+            if (buddy5.position == playerJumpPoint)
+            {
+                buddy5.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if (distanceFromBuddy4 < 2f)
         {
@@ -173,6 +193,10 @@ public class PlayerController : MonoBehaviour
         if (distanceFromBuddy5 > 2f)
         {
             buddy6.transform.position = Vector2.MoveTowards(buddy6.position, buddy5.position, step);
+            if (buddy6.position == playerJumpPoint)
+            {
+                buddy6.AddForce(new Vector2(0f, 400f));
+            }
         }
         else if (distanceFromBuddy5 < 2f)
         {
