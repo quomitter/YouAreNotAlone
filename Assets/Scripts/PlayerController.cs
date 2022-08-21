@@ -37,9 +37,7 @@ public class PlayerController : MonoBehaviour
     float distanceFromBuddy3;
     float distanceFromBuddy4;
     float distanceFromBuddy5;
-    float distanceFromBuddy6;
 
-    Vector2 playerJumpPoint;
 
     float step;
 
@@ -50,17 +48,20 @@ public class PlayerController : MonoBehaviour
     bool jump = false;
     //bool crouch = false;
 
-   
+
     public float dashspeed;
     private float dashTime;
     public float startDashTime;
     private bool isDashing;
     private int counterDash;
 
+    private bool isFollowing;
+    private bool isAbleToJump;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
+        isFollowing = false;
 
         playerRb = GetComponent<Rigidbody2D>();
         buddy1 = GameObject.FindGameObjectWithTag("Buddy1").GetComponent<Rigidbody2D>();
@@ -78,21 +79,40 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        step = 10f * Time.deltaTime;
+        step = 40f * Time.deltaTime;
 
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
         animator.SetBool("isWalking", Convert.ToBoolean(Input.GetAxisRaw("Horizontal")));
 
         //jump
-        if (Input.GetButtonDown("Jump"))
+        if (!jump)
         {
-            jump = true;
-            animator.SetBool("isJumping", true);
-            audioSource.PlayOneShot(aJump, 0.5f);
-            playerJumpPoint = playerRb.position;
-            Instantiate(triggerPrefab, playerJumpPoint, Quaternion.identity);
+            if (Input.GetButtonDown("Jump"))
+            {
+                jump = true;
+                animator.SetBool("isJumping", true);
+                audioSource.PlayOneShot(aJump, 0.5f);
+                if (isAbleToJump)
+                {
+                    buddy1.AddForce(new Vector2(buddy1.velocity.x, 400));
+                    buddy2.AddForce(new Vector2(buddy2.velocity.x, 400));
+                    buddy3.AddForce(new Vector2(buddy3.velocity.x, 400));
+                    buddy4.AddForce(new Vector2(buddy4.velocity.x, 400));
+                    buddy5.AddForce(new Vector2(buddy5.velocity.x, 400));
+                    buddy6.AddForce(new Vector2(buddy6.velocity.x, 400));
+                }
+            }
+        }
 
+        if (Input.GetButtonDown("Fire1"))
+        {
+            isAbleToJump = !isAbleToJump;
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            isFollowing = !isFollowing;
         }
 
         //Dash
@@ -100,7 +120,7 @@ public class PlayerController : MonoBehaviour
         {
             isDashing = true;
             counterDash++;
-   
+
 
         }
 
@@ -114,12 +134,25 @@ public class PlayerController : MonoBehaviour
             else if (isDashing == true && counterDash < 2)
             {
                 dashTime -= Time.deltaTime;
-       
+
                 playerRb.velocity = new Vector2(dashspeed * horizontalMove, playerRb.velocity.y);
 
             }
         }
+        if (!jump)
+        {
+            if (isFollowing)
+            {
+                FollowPlayer();
+            }
+        }
 
+
+    }
+
+
+    void FollowPlayer()
+    {
         //FollowCode
 
         distanceFromPlayer = Vector2.Distance(playerRb.position, buddy1.position);
@@ -130,27 +163,19 @@ public class PlayerController : MonoBehaviour
         distanceFromBuddy5 = Vector2.Distance(buddy5.position, buddy6.position);
         //distanceFromBuddy6 = Vector2.Distance(buddy6.position, buddy2.position);
 
-        
-        if(distanceFromPlayer > 2f) 
+
+        if (distanceFromPlayer > 2f)
         {
-            buddy1.transform.position = Vector2.MoveTowards(buddy1.position, playerRb.position, step);
-            if(buddy1.position == playerJumpPoint)
-            {
-                buddy1.AddForce(new Vector2(0f, 400f));
-            }
+            buddy1.position = Vector2.MoveTowards(buddy1.position, playerRb.position, step);
         }
-        else if(distanceFromPlayer < 2f)
+        else if (distanceFromPlayer < 2f)
         {
             buddy1.velocity = Vector2.zero;
         }
 
         if (distanceFromBuddy1 > 2f)
         {
-            buddy2.transform.position = Vector2.MoveTowards(buddy2.position, buddy1.position, step);
-            if (buddy2.position == playerJumpPoint)
-            {
-                buddy2.AddForce(new Vector2(0f, 400f));
-            }
+            buddy2.position = Vector2.MoveTowards(buddy2.position, buddy1.position, step);
         }
         else if (distanceFromBuddy1 < 2f)
         {
@@ -159,11 +184,7 @@ public class PlayerController : MonoBehaviour
 
         if (distanceFromBuddy2 > 2f)
         {
-            buddy3.transform.position = Vector2.MoveTowards(buddy3.position, buddy2.position, step);
-            if (buddy3.position == playerJumpPoint)
-            {
-                buddy3.AddForce(new Vector2(0f, 400f));
-            }
+            buddy3.position = Vector2.MoveTowards(buddy3.position, buddy2.position, step);
         }
         else if (distanceFromBuddy2 < 2f)
         {
@@ -171,11 +192,7 @@ public class PlayerController : MonoBehaviour
         }
         if (distanceFromBuddy3 > 2f)
         {
-            buddy4.transform.position = Vector2.MoveTowards(buddy4.position, buddy3.position, step);
-            if (buddy4.position == playerJumpPoint)
-            {
-                buddy4.AddForce(new Vector2(0f, 400f));
-            }
+            buddy4.position = Vector2.MoveTowards(buddy4.position, buddy3.position, step);
         }
         else if (distanceFromBuddy3 < 2f)
         {
@@ -183,11 +200,7 @@ public class PlayerController : MonoBehaviour
         }
         if (distanceFromBuddy4 > 2f)
         {
-            buddy5.transform.position = Vector2.MoveTowards(buddy5.position, buddy4.position, step);
-            if (buddy5.position == playerJumpPoint)
-            {
-                buddy5.AddForce(new Vector2(0f, 400f));
-            }
+            buddy5.position = Vector2.MoveTowards(buddy5.position, buddy4.position, step);
         }
         else if (distanceFromBuddy4 < 2f)
         {
@@ -195,20 +208,13 @@ public class PlayerController : MonoBehaviour
         }
         if (distanceFromBuddy5 > 2f)
         {
-            buddy6.transform.position = Vector2.MoveTowards(buddy6.position, buddy5.position, step);
-            if (buddy6.position == playerJumpPoint)
-            {
-                buddy6.AddForce(new Vector2(0f, 400f));
-            }
+            buddy6.position = Vector2.MoveTowards(buddy6.position, buddy5.position, step);
         }
         else if (distanceFromBuddy5 < 2f)
         {
             buddy6.velocity = Vector2.zero;
         }
-
-
     }
-
 
     public void OnLanding()
     {
@@ -226,8 +232,8 @@ public class PlayerController : MonoBehaviour
     }
     public void EnemyKill()
     {
-        playerRb.AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse );
+        playerRb.AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse);
 
     }
-    
+
 }
