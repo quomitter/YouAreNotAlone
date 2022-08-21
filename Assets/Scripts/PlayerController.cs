@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     float distanceFromBuddy5;
     float distanceFromBuddy6;
 
+    Vector2 playerJumpPoint;
+
     float step;
 
     public float runSpeed = 40f;
@@ -86,6 +88,8 @@ public class PlayerController : MonoBehaviour
             jump = true;
             animator.SetBool("isJumping", true);
             audioSource.PlayOneShot(aJump, 0.5f);
+            playerJumpPoint = playerRb.position;
+
         }
 
         //Dash
@@ -177,17 +181,7 @@ public class PlayerController : MonoBehaviour
 
 
     }
-    void BuddyFollow()
-    {
-        
 
-        
-        
-        
-        
-        
-        
-    }
 
     public void OnLanding()
     {
