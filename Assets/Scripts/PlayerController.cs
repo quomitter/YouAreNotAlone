@@ -28,8 +28,8 @@ public class PlayerController : MonoBehaviour
     public Animator[] animator;
 
 
-    public AudioClip aJump;
-    AudioSource audioSource;
+    //public AudioClip aJump;
+    //AudioSource audioSource;
 
     public int bumperCounter = 0;
 
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
 
         activePlayer[0] = GetComponent<Rigidbody2D>();
         activePlayer[1] = GameObject.FindGameObjectWithTag("Buddy1").GetComponent<Rigidbody2D>();
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
                     jump = true;
                     jumpCounter++;
                     animator[bumperCounter].SetBool("isJumping", true);
-                    audioSource.PlayOneShot(aJump, 0.5f);
+                    //audioSource.PlayOneShot(aJump, 0.5f);
                 }
             }
         }
@@ -236,8 +236,8 @@ public class PlayerController : MonoBehaviour
         m_FacingRight = !m_FacingRight;
 
         // Multiply the player's x local scale by -1.
-        Vector3 theScale = transform.localScale;
+        Vector3 theScale = activePlayer[bumperCounter].transform.localScale;
         theScale.x *= -1;
-        transform.localScale = theScale;
+        activePlayer[bumperCounter].transform.localScale = theScale;
     }
 }
