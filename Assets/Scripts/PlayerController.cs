@@ -194,11 +194,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void EnemyKill()
-    {
-        activePlayer[bumperCounter].AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse);
+    //public void EnemyKill()
+    //{
+    //    activePlayer[bumperCounter].AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse);
 
-    }
+    //}
     public void Move(float move, /*bool crouch,*/ bool jump)
     {
         if (m_Grounded || m_AirControl)

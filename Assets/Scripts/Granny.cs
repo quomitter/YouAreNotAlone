@@ -36,7 +36,7 @@ public class Granny : MonoBehaviour
             if (direction.y == -1 || direction.y == 1)
             {
                 Score.Instance.AddHundoPeice();
-                player.EnemyKill();
+                //player.EnemyKill();
                 GetComponent<Collider2D>().enabled = false;
                 audioSource1.PlayOneShot(aHit1, 0.7F);
                 Destroy(this.gameObject, 0.15f);

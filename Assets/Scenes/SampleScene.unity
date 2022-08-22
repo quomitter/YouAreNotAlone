@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 706486965}
   - component: {fileID: 706486964}
   - component: {fileID: 706486963}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1752,7 +1752,6 @@ MonoBehaviour:
   - {fileID: 8411399347651228870}
   - {fileID: 8411399347479139756}
   - {fileID: 8411399348237818989}
-  aJump: {fileID: 0}
   bumperCounter: 0
   triggerPrefab: {fileID: 8960353790350373649, guid: 070e4d82bff3b004d852999f1a5594c5, type: 3}
   relativePositionToBuddy1: {x: 0, y: 0}
@@ -1931,90 +1930,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.74559426, y: 1.1490324}
   m_EdgeRadius: 0
---- !u!114 &7185017750506913120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399348237818988}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399348237818988}
-  speed: 2
---- !u!114 &7185017750577160866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399348318553006}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399348318553006}
-  speed: 2
---- !u!114 &7185017750771603455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399348509996787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399348509996787}
-  speed: 2
---- !u!114 &7185017750991150350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399348726397954}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399348726397954}
-  speed: 2
---- !u!114 &7185017752020563105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399347479139757}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399347479139757}
-  speed: 2
---- !u!114 &7185017752066315723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411399347651228871}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7fc1c1ff0f2eae41af07e7921d0167d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1: {fileID: 8411399347651228871}
-  speed: 2
 --- !u!95 &8411399347479139756
 Animator:
   serializedVersion: 4
@@ -2048,7 +1963,6 @@ GameObject:
   - component: {fileID: 8411399347479139756}
   - component: {fileID: 6738162795892938501}
   - component: {fileID: 8701587746086983044}
-  - component: {fileID: 7185017752020563105}
   m_Layer: 3
   m_Name: buddy 1_0 (5)
   m_TagString: Buddy5
@@ -2227,7 +2141,6 @@ GameObject:
   - component: {fileID: 8411399347651228870}
   - component: {fileID: 6738162796450936431}
   - component: {fileID: 8701587745185625326}
-  - component: {fileID: 7185017752066315723}
   m_Layer: 3
   m_Name: buddy 1_0 (4)
   m_TagString: Buddy4
@@ -2248,7 +2161,6 @@ GameObject:
   - component: {fileID: 8411399348237818989}
   - component: {fileID: 6738162794856390340}
   - component: {fileID: 8701587746813156421}
-  - component: {fileID: 7185017750506913120}
   m_Layer: 3
   m_Name: buddy 1_0 (6)
   m_TagString: Buddy6
@@ -2427,7 +2339,6 @@ GameObject:
   - component: {fileID: 8411399348318553007}
   - component: {fileID: 6738162794987454726}
   - component: {fileID: 8701587746925347719}
-  - component: {fileID: 7185017750577160866}
   m_Layer: 3
   m_Name: buddy 1_0 (3)
   m_TagString: Buddy3
@@ -2557,7 +2468,6 @@ GameObject:
   - component: {fileID: 8411399348509996786}
   - component: {fileID: 6738162794591564891}
   - component: {fileID: 8701587747086382810}
-  - component: {fileID: 7185017750771603455}
   m_Layer: 3
   m_Name: buddy 1_0 (1)
   m_TagString: Buddy1
@@ -2647,7 +2557,6 @@ GameObject:
   - component: {fileID: 8411399348726397955}
   - component: {fileID: 6738162795378392746}
   - component: {fileID: 8701587746261810219}
-  - component: {fileID: 7185017750991150350}
   m_Layer: 3
   m_Name: buddy 1_0 (2)
   m_TagString: Buddy2
