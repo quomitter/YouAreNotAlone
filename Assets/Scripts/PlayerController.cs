@@ -3,38 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
 
-    public CharacterController controller;
+    [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
+    [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
+    [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
+    [SerializeField] private Transform[] m_GroundCheck;                           // A position marking where to check if the player is grounded.
+    [SerializeField] private Transform[] m_CeilingCheck;                          // A position marking where to check for ceilings
+
+
+    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
+    public bool m_Grounded;            // Whether or not the player is grounded.
+
+    [SerializeField] public Rigidbody2D[] activePlayer;
+
+    private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+    private Vector3 m_Velocity = Vector3.zero;
+
+  
     [SerializeField] public Animator animator;
+    [SerializeField] public Animator Activeanimator;
 
     public AudioClip aJump;
     AudioSource audioSource;
 
-    [SerializeField] GameObject triggerPrefab;
+    public int bumperCounter = 0;
 
-    [SerializeField] Rigidbody2D playerRb;
-    [SerializeField] Rigidbody2D buddy1;
-    [SerializeField] Rigidbody2D buddy2;
-    [SerializeField] Rigidbody2D buddy3;
-    [SerializeField] Rigidbody2D buddy4;
-    [SerializeField] Rigidbody2D buddy5;
-    [SerializeField] Rigidbody2D buddy6;
+    [SerializeField] GameObject triggerPrefab;
 
     [SerializeField] Vector2 relativePositionToBuddy1;
 
-    float distanceFromPlayer;
-    float distanceFromBuddy1;
-    float distanceFromBuddy2;
-    float distanceFromBuddy3;
-    float distanceFromBuddy4;
-    float distanceFromBuddy5;
-
     int jumpCounter;
-
-    float step;
 
     public float runSpeed = 40f;
     public float bounceForce;
@@ -50,33 +53,45 @@ public class PlayerController : MonoBehaviour
     private bool isDashing;
     private int counterDash;
 
-    private bool canFollow;
-    private bool isAbleToJump;
 
+    [Header("Events")]
+    [Space]
+
+    public UnityEvent OnLandEvent;
+
+    [System.Serializable]
+    public class BoolEvent : UnityEvent<bool> { }
+
+    private void Awake()
+    {
+      
+        jumpCounter = 0;
+
+    }
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        canFollow = false;
-        jumpCounter = 0;
-        isAbleToJump = false;
 
-        playerRb = GetComponent<Rigidbody2D>();
-        buddy1 = GameObject.FindGameObjectWithTag("Buddy1").GetComponent<Rigidbody2D>();
-        buddy2 = GameObject.FindGameObjectWithTag("Buddy2").GetComponent<Rigidbody2D>();
-        buddy3 = GameObject.FindGameObjectWithTag("Buddy3").GetComponent<Rigidbody2D>();
-        buddy4 = GameObject.FindGameObjectWithTag("Buddy4").GetComponent<Rigidbody2D>();
-        buddy5 = GameObject.FindGameObjectWithTag("Buddy5").GetComponent<Rigidbody2D>();
-        buddy6 = GameObject.FindGameObjectWithTag("Buddy6").GetComponent<Rigidbody2D>();
+        activePlayer[0] = GetComponent<Rigidbody2D>();
+        activePlayer[1] = GameObject.FindGameObjectWithTag("Buddy1").GetComponent<Rigidbody2D>();
+        activePlayer[2] = GameObject.FindGameObjectWithTag("Buddy2").GetComponent<Rigidbody2D>();
+        activePlayer[3] = GameObject.FindGameObjectWithTag("Buddy3").GetComponent<Rigidbody2D>();
+        activePlayer[4] = GameObject.FindGameObjectWithTag("Buddy4").GetComponent<Rigidbody2D>();
+        activePlayer[5] = GameObject.FindGameObjectWithTag("Buddy5").GetComponent<Rigidbody2D>();
+        activePlayer[6] = GameObject.FindGameObjectWithTag("Buddy6").GetComponent<Rigidbody2D>();
 
 
         dashTime = startDashTime;
         isDashing = false;
         counterDash = 0;
+
+
+        if (OnLandEvent == null)
+            OnLandEvent = new UnityEvent();
     }
     // Update is called once per frame
     void Update()
     {
-        step = 20f * Time.deltaTime;
 
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
@@ -93,31 +108,13 @@ public class PlayerController : MonoBehaviour
                     jumpCounter++;
                     animator.SetBool("isJumping", true);
                     audioSource.PlayOneShot(aJump, 0.5f);
-                    if (isAbleToJump)
-                    {
-                        buddy1.AddForce(new Vector2(buddy1.velocity.x, 400));
-                        buddy2.AddForce(new Vector2(buddy2.velocity.x, 400));
-                        buddy3.AddForce(new Vector2(buddy3.velocity.x, 400));
-                        buddy4.AddForce(new Vector2(buddy4.velocity.x, 400));
-                        buddy5.AddForce(new Vector2(buddy5.velocity.x, 400));
-                        buddy6.AddForce(new Vector2(buddy6.velocity.x, 400));
-                    }
                 }
             }
         }
         else
         {
             jumpCounter = 0;
-        }
 
-        if (Input.GetButtonDown("Fire1"))
-        {
-            isAbleToJump = !isAbleToJump;
-        }
-
-        if (Input.GetButtonDown("Fire2"))
-        {
-            canFollow = !canFollow;
         }
 
         //Dash
@@ -125,8 +122,27 @@ public class PlayerController : MonoBehaviour
         {
             isDashing = true;
             counterDash++;
+        }
 
-
+        if (Input.GetButtonDown("LeftBumper"))
+        {
+            if (bumperCounter <= 6 && bumperCounter >= 0)
+            {
+                if(bumperCounter > 0)
+                    bumperCounter--;
+                else
+                    bumperCounter = 6;
+            }
+        }
+        if (Input.GetButtonDown("RightBumper"))
+        {
+            if (bumperCounter <= 6 && bumperCounter >= 0)
+            {
+                if (bumperCounter < 6)
+                    bumperCounter++;
+                else
+                    bumperCounter = 0; 
+            }
         }
 
         else
@@ -140,85 +156,13 @@ public class PlayerController : MonoBehaviour
             {
                 dashTime -= Time.deltaTime;
 
-                playerRb.velocity = new Vector2(dashspeed * horizontalMove, playerRb.velocity.y);
+                activePlayer[bumperCounter].velocity = new Vector2(dashspeed * horizontalMove, activePlayer[bumperCounter].velocity.y);
 
             }
         }
 
-
-        if (!jump)
-        {
-            if (canFollow)
-            {
-                FollowPlayer();
-            }
-        }
-       
     }
 
-
-    void FollowPlayer()
-    {
-        //FollowCode
-
-        distanceFromPlayer = Vector2.Distance(playerRb.position, buddy1.position);
-        distanceFromBuddy1 = Vector2.Distance(buddy1.position, buddy2.position);
-        distanceFromBuddy2 = Vector2.Distance(buddy2.position, buddy3.position);
-        distanceFromBuddy3 = Vector2.Distance(buddy3.position, buddy4.position);
-        distanceFromBuddy4 = Vector2.Distance(buddy4.position, buddy5.position);
-        distanceFromBuddy5 = Vector2.Distance(buddy5.position, buddy6.position);
-        //distanceFromBuddy6 = Vector2.Distance(buddy6.position, buddy2.position);
-
-        
-        if (distanceFromPlayer > 2f)
-        {
-            buddy1.position = Vector2.MoveTowards(buddy1.position, playerRb.position, step);
-        }
-        else if (distanceFromPlayer < 2f)
-        {
-            buddy1.velocity = Vector2.zero;
-        }
-        if (distanceFromBuddy1 > 2f)
-        {
-            buddy2.position = Vector2.MoveTowards(buddy2.position, buddy1.position, step);
-        }
-        else if (distanceFromBuddy1 < 2f)
-        {
-            buddy2.velocity = Vector2.zero;
-        }
-        if (distanceFromBuddy2 > 2f)
-        {
-            buddy3.position = Vector2.MoveTowards(buddy3.position, buddy2.position, step);
-        }
-        else if (distanceFromBuddy2 < 2f)
-        {
-            buddy3.velocity = Vector2.zero;
-        }
-        if (distanceFromBuddy3 > 2f)
-        {
-            buddy4.position = Vector2.MoveTowards(buddy4.position, buddy3.position, step);
-        }
-        else if (distanceFromBuddy3 < 2f)
-        {
-            buddy4.velocity = Vector2.zero;
-        }
-        if (distanceFromBuddy4 > 2f)
-        {
-            buddy5.position = Vector2.MoveTowards(buddy5.position, buddy4.position, step);
-        }
-        else if (distanceFromBuddy4 < 2f)
-        {
-            buddy5.velocity = Vector2.zero;
-        }
-        if (distanceFromBuddy5 > 2f)
-        {
-            buddy6.position = Vector2.MoveTowards(buddy6.position, buddy5.position, step);
-        }
-        else if (distanceFromBuddy5 < 2f)
-        {
-            buddy6.velocity = Vector2.zero;
-        }
-    }
 
     public void OnLanding()
     {
@@ -232,12 +176,68 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Move our character
-        controller.Move(horizontalMove * Time.fixedDeltaTime, /*crouch,*/ jump);
+        Move(horizontalMove * Time.fixedDeltaTime, /*crouch,*/ jump);
+
+        bool wasGrounded = m_Grounded;
+        m_Grounded = false;
+
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck[bumperCounter].position, k_GroundedRadius, m_WhatIsGround);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject != gameObject)
+            {
+                m_Grounded = true;
+                if (!wasGrounded)
+                    OnLandEvent.Invoke();
+            }
+        }
     }
     public void EnemyKill()
     {
-        playerRb.AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse);
+        activePlayer[bumperCounter].AddForce(new Vector2(0, bounceForce), ForceMode2D.Impulse);
+
+    }
+    public void Move(float move, /*bool crouch,*/ bool jump)
+    {
+        if (m_Grounded || m_AirControl)
+        {
+
+            Vector3 targetVelocity = new Vector2(move * 10f, activePlayer[bumperCounter].velocity.y);
+            // And then smoothing it out and applying it to the character
+            activePlayer[bumperCounter].velocity = Vector3.SmoothDamp(activePlayer[bumperCounter].velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+
+            // If the input is moving the player right and the player is facing left...
+            if (move > 0 && !m_FacingRight)
+            {
+                // ... flip the player.
+                Flip();
+            }
+            // Otherwise if the input is moving the player left and the player is facing right...
+            else if (move < 0 && m_FacingRight)
+            {
+                // ... flip the player.
+                Flip();
+            }
+        }
+        if (m_Grounded && jump)
+        {
+            // Add a vertical force to the player.
+            m_Grounded = false;
+            activePlayer[bumperCounter].AddForce(new Vector2(0f, m_JumpForce));
+        }
 
     }
 
+    private void Flip()
+    {
+        // Switch the way the player is labelled as facing.
+        m_FacingRight = !m_FacingRight;
+
+        // Multiply the player's x local scale by -1.
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
 }
