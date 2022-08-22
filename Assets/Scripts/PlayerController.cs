@@ -19,14 +19,14 @@ public class PlayerController : MonoBehaviour
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     public bool m_Grounded;            // Whether or not the player is grounded.
 
-    [SerializeField] public Rigidbody2D[] activePlayer;
+    public Rigidbody2D[] activePlayer;
 
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
 
   
-    [SerializeField] public Animator animator;
-    [SerializeField] public Animator Activeanimator;
+    public Animator[] animator;
+
 
     public AudioClip aJump;
     AudioSource audioSource;
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        animator.SetBool("isWalking", Convert.ToBoolean(Input.GetAxisRaw("Horizontal")));
+        animator[bumperCounter].SetBool("isWalking", Convert.ToBoolean(Input.GetAxisRaw("Horizontal")));
 
         //jump
         if (jumpCounter < 2)
@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
                 {
                     jump = true;
                     jumpCounter++;
-                    animator.SetBool("isJumping", true);
+                    animator[bumperCounter].SetBool("isJumping", true);
                     audioSource.PlayOneShot(aJump, 0.5f);
                 }
             }
@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         counterDash = 0;
         jump = false;
-        animator.SetBool("isJumping", false);
+        animator[bumperCounter].SetBool("isJumping", false);
     }
 
 

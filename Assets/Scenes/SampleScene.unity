@@ -1744,8 +1744,14 @@ MonoBehaviour:
   - {fileID: 8701587745185625326}
   - {fileID: 8701587746086983044}
   - {fileID: 8701587746813156421}
-  animator: {fileID: 1683671833}
-  Activeanimator: {fileID: 0}
+  animator:
+  - {fileID: 1683671833}
+  - {fileID: 8411399348509996786}
+  - {fileID: 8411399348726397955}
+  - {fileID: 8411399348318553007}
+  - {fileID: 8411399347651228870}
+  - {fileID: 8411399347479139756}
+  - {fileID: 8411399348237818989}
   aJump: {fileID: 0}
   bumperCounter: 0
   triggerPrefab: {fileID: 8960353790350373649, guid: 070e4d82bff3b004d852999f1a5594c5, type: 3}
